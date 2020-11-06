@@ -62,5 +62,6 @@ li a:hover {
   background-color: #e699ff;
   text-align: center;
   vertical-align: middle;
-  color: white;
+  font-family: 'DM Sans';
+  height: 30px;
 }  
