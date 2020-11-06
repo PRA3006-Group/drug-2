@@ -58,3 +58,9 @@ li a:hover {
   background-color: #e6f0ff;
 }
 
+.selection {
+  background-color: #e699ff;
+  text-align: center;
+  vertical-align: middle;
+  color: white;
+}  
