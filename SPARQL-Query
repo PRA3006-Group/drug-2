@@ -1,0 +1,8 @@
+SELECT DISTINCT ?disorderLabel ?drugLabel  ?functionLabel
+WHERE
+{
+  ?disorder wdt:P279 wd: #add specific disease.
+  ?disorder wdt:P2176 ?drug.
+  ?drug wdt:P2868 ?function.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+  }
