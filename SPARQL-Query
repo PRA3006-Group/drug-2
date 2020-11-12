@@ -18,7 +18,7 @@ PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
 
  WHERE
  {
-  ?drug ?p "Placebo [clinicaltrials_resource:b8162c4314dcee67de0602d1aee9d024]"@en.
+  ?drug ?p "Placebo"@en.  #the specific drug we are searching for
   ?article cv:intervention ?drug;
            cv:url ?article_url;
            rdfs:label ?article_name;
