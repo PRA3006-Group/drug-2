@@ -13,10 +13,8 @@ WHERE
 For Bio2RDF: 
 
 PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
-
- SELECT DISTINCT ?article_url ?article_name ?article_summary
-
- WHERE
+SELECT DISTINCT ?article_url ?article_name ?article_summary
+WHERE
  {
   ?drug ?p "Placebo"@en.  #the specific drug we are searching for
   ?article cv:intervention ?drug;
@@ -24,3 +22,22 @@ PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
            rdfs:label ?article_name;
            cv:brief-summary ?article_summary.
  }
+
+Federated Query:
+
+PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
+
+SELECT DISTINCT ?disorderLabel ?drugLabel  ?functionLabel ?article_url ?article_name ?article_summary
+
+WHERE {
+  ?disorder wdt:P279 wd:Q188638. #add specific disease.
+  ?disorder wdt:P2176 ?drug.
+  ?drug wdt:P2868 ?function.
+  SERVICE <https://bio2rdf.org/> {  
+    ?article cv:intervention ?drug;
+             cv:url ?article_url;
+             rdfs:label ?article_name;
+             cv:brief-summary ?article_summary.
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
