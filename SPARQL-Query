@@ -1,3 +1,5 @@
+For Wikidata:
+
 SELECT DISTINCT ?disorderLabel ?drugLabel  ?functionLabel
 WHERE
 {
@@ -6,3 +8,19 @@ WHERE
   ?drug wdt:P2868 ?function.
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
   }
+
+
+For Bio2RDF: 
+
+PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
+
+ SELECT DISTINCT ?article_url ?article_name ?article_summary
+
+ WHERE
+ {
+  ?drug ?p "Placebo [clinicaltrials_resource:b8162c4314dcee67de0602d1aee9d024]"@en.
+  ?article cv:intervention ?drug;
+           cv:url ?article_url;
+           rdfs:label ?article_name;
+           cv:brief-summary ?article_summary.
+ }
