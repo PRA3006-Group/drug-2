@@ -33,7 +33,7 @@ WHERE {
   ?disorder wdt:P279 wd:Q188638. #add specific disease.
   ?disorder wdt:P2176 ?drug.
   ?drug wdt:P2868 ?function.
-  SERVICE <https://bio2rdf.org/> {  
+  SERVICE <http://bio2rdf.org/sparql> {  
     ?article cv:intervention ?drug;
              cv:url ?article_url;
              rdfs:label ?article_name;
