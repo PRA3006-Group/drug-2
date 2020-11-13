@@ -1,9 +1,9 @@
 For Wikidata:
 
-SELECT DISTINCT  ?drugLabel ?disorderLabel 
+SELECT DISTINCT  ?drugLabel ?disorderLabel ?diseaseClusterLabel
 WHERE
-{
-   ?disorder wdt:P279 wd: #add specific disease cluster.
+{  VALUES ?diseaseCluster {wd:Q188874 wd:Q190805 wd:Q544006 wd:Q576349 wd:Q3508753 wd:Q3392853 wd:Q1054718 wd:Q200779 wd:Q4941552} 
+   ?disorder wdt:P279 ?diseaseCluster.
    ?disorder wdt:P2176 ?drug.
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
   }
