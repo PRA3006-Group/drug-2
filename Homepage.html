@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
-<link rel='stylesheet' href="stylesheet.css">
-<div class="titl">
-  <head>
-    Drug<sup>2</sup> - A multi-functionality visualizer for medical drugs
-  </head>
-</div>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
+  <link rel='stylesheet' href="stylesheet.css">
+  <div class="titl">
+    <head>
+      Drug<sup>2</sup> - A multi-functionality visualizer for medical drugs
+    </head>
+  </div>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Initialize a global WBK function -->
+    <script src="https://cdn.rawgit.com/maxlath/wikidata-sdk/dist/dist/wikibase-sdk.min.js"></script>
+    <!-- Initialize a global wdk object using the WBK object -->
+    <script src="https://cdn.rawgit.com/maxlath/wikidata-sdk/dist/dist/wikidata-sdk.min.js"></script>
+  <script>
+    const wbk = new WBK({
+        instance: 'https://bio2rdf.org/',
+        sparqlEndpoint: 'https://bio2rdf.org/sparql'
+      });
+  </script>
 </head>
+
 <body>
 
 <div class="bar">
@@ -27,8 +38,41 @@
 </div>
   
 <div class="selection">
-  Select a disease cluster:
+  Select a disease cluster
+  <div id="outer">
+    <div class="inner"><button class="disCategory">Mood disorders</button></div>
+    <div class="inner"><button class="disCategory">Heart diseases</button></div>
+    <div class="inner"><button class="disCategory">Anxiety disorders</button></div>
+    <div class="inner"><button class="disCategory">Brain diseases</button></div>
+    <div class="inner"><button class="disCategory">Inflammatory diseases</button></div>
+    <div class="inner"><button class="disCategory">Lung diseases</button></div>
+    <div class="inner"><button class="disCategory">Kidney diseases</button></div>
+    <div class="inner"><button class="disCategory">Genetic diseases</button></div>
+    <div class="inner"><button class="disCategory">Bone diseases</button></div>
+  </div>
 </div>  
+
+<pre id="output"></pre>
+  <script>
+    query = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:> SELECT DISTINCT ?article_url ?article_name
+  WHERE
+   {
+    ?drug ?p "Placebo"@en.  #the specific drug we are searching for
+    ?article cv:intervention ?drug;
+             cv:url ?article_url;
+             rdfs:label ?article_name;
+             cv:brief-summary ?article_summary.
+   } LIMIT 20`
+    const url = wbk.sparqlQuery(query)
+    async function main () {
+      const response = await fetch(url)
+      const results = await response.json()
+      const simpleResults = wbk.simplify.sparqlResults(results)
+      document.getElementById('output').innerHTML =
+        JSON.stringify(simpleResults, undefined, 2);
+    }
+    main()
+  </script>
 
 </body>
 </html>
