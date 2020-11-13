@@ -1,11 +1,14 @@
 For Wikidata:
 
-SELECT DISTINCT ?disorderLabel ?drugLabel  ?functionLabel
+SELECT DISTINCT ?diseaseClusterLabel ?drugLabel ?disorderLabel ?drugname
 WHERE
 {
-  ?disorder wdt:P279 wd: #add specific disease.
+  VALUES ?diseaseCluster {wd:Q188874 wd:Q190805 wd:Q544006 wd:Q576349 wd:Q3508753 wd:Q3392853 wd:Q1054718 wd:Q200779 wd:Q4941552}
+   # ?diseaseCluster wdt:P2176 ?drug.  # drug used for treatment (P2176) 
+  ?disorder wdt:P279 ?diseaseCluster.
   ?disorder wdt:P2176 ?drug.
-  ?drug wdt:P2868 ?function.
+  # ?drug wdt:P373 ?drugname. # loss of +300 results when using this particular line
+  
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
   }
 
