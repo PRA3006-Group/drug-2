@@ -20,6 +20,7 @@
         sparqlEndpoint: 'https://bio2rdf.org/sparql'
       });
   </script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 
 <body>
@@ -28,8 +29,8 @@
 <ul>
   <li><a class="current" href="#home">Home</a></li>
   <li><a href="#databases">Databases</a></li>
-  <li><a href="#example">Example</a></li>
-  <li><a class="final" href="#about">About</a></li>
+  <li><a href="#example">Background</a></li>
+  <li><a class="final" href="/Users/Kabir%20Arora/Desktop/PRA3006site/About.html">About</a></li>
 </ul>
 </div>
 
@@ -40,39 +41,164 @@
 <div class="selection">
   Select a disease cluster
   <div id="outer">
-    <div class="inner"><button class="disCategory">Mood disorders</button></div>
-    <div class="inner"><button class="disCategory">Heart diseases</button></div>
-    <div class="inner"><button class="disCategory">Anxiety disorders</button></div>
-    <div class="inner"><button class="disCategory">Brain diseases</button></div>
-    <div class="inner"><button class="disCategory">Inflammatory diseases</button></div>
-    <div class="inner"><button class="disCategory">Lung diseases</button></div>
-    <div class="inner"><button class="disCategory">Kidney diseases</button></div>
-    <div class="inner"><button class="disCategory">Genetic diseases</button></div>
-    <div class="inner"><button class="disCategory">Bone diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("mood")>Mood disorders</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("heart")>Heart diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("anxiety")>Anxiety disorders</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("brain")>Brain diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("inflam")>Inflammatory diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("lung")>Lung diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("kidney")>Kidney diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick=chooseClust("bone")>Bone diseases</button></div>
   </div>
 </div>  
 
+  <div id="chart" margin="center">
+		</div>
+		
+		<script>
+
+			dataset = [ {protein: "Cyclin dependent kinase 2", count: 10},
+						{protein: "Beta-secretase 1", count: 20},
+						{protein: "DNA polymerase beta", count: 30},
+						{protein: "Carbonic anhydrase 2", count: 40},
+						{protein: "Beta-2-microglobulin", count: 50},
+						{protein: "Coagulation factor II, thrombin", count: 60},
+						{protein: "Hemoglobin subunit alpha 2", count: 70},
+						{protein: "Hemoglobin subunit beta", count: 80},
+						{protein: "Transthyretin", count: 90},
+						{protein: "insulin", count: 100}];
+						
+			data = {};
+			// restructure the asyncrounos response by creating a map of protein names and PDB counts
+			data.children = dataset.map(function(item) { return { "Name": item.protein , "Count": item.count } });
+
+			var width = 1200;
+			var height = 800;
+			
+			// Create the main SVG element
+			var svg = d3.select('#chart').append('svg')
+					  .attr('width', width)
+					  .attr('height', height)
+					  .attr('transform', 'translate(0,0)');
+
+			var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+			// Create a new structure from the data where each element has coordinates corresponds
+			// to the size of the holding SVG
+			var bubble = d3.pack(data)
+					  .size([height, height])
+					  .padding(5);
+
+			var nodes = d3.hierarchy(data)
+					  .sum(function(d) { return d.Count; });
+
+			// Create the bubbles
+			circles = svg.selectAll("g")
+					.data(bubble(nodes).descendants())
+					.enter()
+					.filter(function(d){
+					  return  !d.children
+					})
+					.append("g")
+					.attr("transform", function(d) {
+					  return "translate(" + d.x + "," + d.y + ")";
+					})
+
+			circles.append("circle")
+					.attr("r", function(d) {
+						  return d.r;
+					})
+					.style("fill", function(d,i) {
+						  return color(i);
+					})
+
+			// Add the text to the bubbles
+			circles.append("text")
+					.style("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", function(d){
+						return d.r/8;
+					})
+					.text(function(d) {
+						return d.data.Name.substring(0, d.r / 3);
+					});
+
+			// Add the text to the bubbles
+			circles.append("text")
+				  .attr("dy", "1.3em")
+				  .style("text-anchor", "middle")
+				  .text(function(d) {
+					  return "PDB count: " + d.data.Count;
+				  })
+				  .attr("font-family", "sans-serif")
+				  .attr("font-size", function(d){
+					  return d.r/8;
+				  })
+		</script>
+
+  
+<div class="chartB">
+</div>  
+
+<div class="chartC">
 <pre id="output"></pre>
   <script>
-    query = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:> SELECT DISTINCT ?article_url ?article_name
-  WHERE
-   {
-    ?drug ?p "Placebo"@en.  #the specific drug we are searching for
-    ?article cv:intervention ?drug;
-             cv:url ?article_url;
-             rdfs:label ?article_name;
-             cv:brief-summary ?article_summary.
-   } LIMIT 20`
-    const url = wbk.sparqlQuery(query)
-    async function main () {
+    let query = ``;
+    function chooseClust(clust) {
+      switch(clust) {
+        case "mood":
+          query = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:> SELECT DISTINCT ?article_url ?article_name
+                   WHERE
+                   {
+                     ?drug ?p "Placebo"@en.  #the specific drug we are searching for
+                     ?article cv:intervention ?drug;
+                     cv:url ?article_url;
+                     rdfs:label ?article_name;
+                     cv:brief-summary ?article_summary.
+                   } LIMIT 5`;
+          break;
+        case "heart":
+          query = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:> SELECT DISTINCT ?article_url
+                   WHERE
+                   {
+                     ?drug ?p "Placebo"@en.  #the specific drug we are searching for
+                     ?article cv:intervention ?drug;
+                     cv:url ?article_url;
+                     rdfs:label ?article_name;
+                     cv:brief-summary ?article_summary.
+                   } LIMIT 5`;
+          break;
+        case "inflam":
+          query = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:> SELECT DISTINCT ?article_url ?article_name
+                   WHERE
+                   {
+                     ?drug ?p "Placebo"@en.  #the specific drug we are searching for
+                     ?article cv:intervention ?drug;
+                     cv:url ?article_url;
+                     rdfs:label ?article_name;
+                     cv:brief-summary ?article_summary.
+                   } LIMIT 5`;
+          break;
+      }    
+      main(query)
+    } 
+ 
+    
+    async function main (query) {
+      const url = wbk.sparqlQuery(query)
       const response = await fetch(url)
       const results = await response.json()
       const simpleResults = wbk.simplify.sparqlResults(results)
       document.getElementById('output').innerHTML =
         JSON.stringify(simpleResults, undefined, 2);
     }
-    main()
+    
+    main(query)
+
   </script>
+</div>
+
+
 
 </body>
 </html>
