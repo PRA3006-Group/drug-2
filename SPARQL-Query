@@ -3,7 +3,7 @@ For Wikidata:
 SELECT DISTINCT  ?drugLabel ?disorderLabel 
 WHERE
 {
-   ?disorder wdt:P279 wd #add specific disease.
+   ?disorder wdt:P279 wd: #add specific disease cluster.
    ?disorder wdt:P2176 ?drug.
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
   }
