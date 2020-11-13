@@ -1,14 +1,10 @@
 For Wikidata:
 
-SELECT DISTINCT ?diseaseClusterLabel ?drugLabel ?disorderLabel ?drugname
+SELECT DISTINCT  ?drugLabel ?disorderLabel 
 WHERE
 {
-  VALUES ?diseaseCluster {wd:Q188874 wd:Q190805 wd:Q544006 wd:Q576349 wd:Q3508753 wd:Q3392853 wd:Q1054718 wd:Q200779 wd:Q4941552}
-   # ?diseaseCluster wdt:P2176 ?drug.  # drug used for treatment (P2176) 
-  ?disorder wdt:P279 ?diseaseCluster.
-  ?disorder wdt:P2176 ?drug.
-  # ?drug wdt:P373 ?drugname. # loss of +300 results when using this particular line
-  
+   ?disorder wdt:P279 wd #add specific disease.
+   ?disorder wdt:P2176 ?drug.
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
   }
 
@@ -16,15 +12,12 @@ WHERE
 For Bio2RDF: 
 
 PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
-SELECT DISTINCT ?article_url ?article_name ?article_summary
+SELECT DISTINCT ?drug ?article
 WHERE
  {
-  ?drug ?p "Placebo"@en.  #the specific drug we are searching for
-  ?article cv:intervention ?drug;
-           cv:url ?article_url;
-           rdfs:label ?article_name;
-           cv:brief-summary ?article_summary.
- }
+  ?drug dcterms:title ""@en.  #the specific drug we are searching for
+  ?article cv:intervention ?drug.
+           }
 
 Federated Query:
 
