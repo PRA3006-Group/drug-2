@@ -1,3 +1,7 @@
+/* ----------------------------------------- */
+/* Style elements that apply to all webpages */
+/* ----------------------------------------- */
+
 .titl {
   margin: 0px;
   width: calc(100%);
@@ -91,9 +95,18 @@ li a:hover {
   transform:scale(1.3,1.3);
 }
 
+/* Two types of main page units - boxUnit is for centered units, boxUnit2 provides more flexibility */
 .boxUnit {
   padding: 80px 10px 60px 10px;
   text-align: center;
+  border-style: solid;
+  border-color: #99c2ff;
+  border-width: 0px 10px 10px 10px;
+}
+
+.boxUnit2 {
+  padding: 80px 10px 40px 10px;
+  text-align: left;
   border-style: solid;
   border-color: #99c2ff;
   border-width: 0px 10px 10px 10px;
@@ -103,11 +116,30 @@ li a:hover {
   font-size: 6em;
   line-height: 10px;
   height: 100px;
+  text-align: center;
 }
 
 .boxUnitTitle:hover {
   color: blue;
 }
+
+.standardBodyText {
+  font-size: 1.3em;
+}
+
+/* -------------------------------------------- */
+/*  Style elements that apply only to Homepage  */
+/* -------------------------------------------- */
+
+.stepOrdinal {
+  width: 28px; height: 28px;
+  display:inline-block;
+  text-align: center;
+}
+
+/* ----------------------------------------- */
+/*  Style elements that apply only to About  */
+/* ----------------------------------------- */
 
 .photos img {
     display: inline-block;
@@ -156,6 +188,3 @@ li a:hover {
   flex: 1; /*grow*/
 }
 
-.pra3006name {
-  font-size: 1.3em;
-}
