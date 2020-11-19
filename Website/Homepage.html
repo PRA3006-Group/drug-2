@@ -44,16 +44,31 @@
 <!-- |--- /\/\/\/\/\ Add links to other webpages        -->	
 <div class="bar">
 <ul>
-  <li><a class="current" href="#home">Home</a></li>
-  <li><a href="#databases">Databases</a></li>
-  <li><a href="#example">Background</a></li>
-  <li><a class="final" href="/Users/Kabir%20Arora/Desktop/PRA3006site/About.html">About</a></li>
+  <li><a class="current" href="Homepage.html">Home</a></li>
+  <li><a href="Databases.html">Databases</a></li>
+  <li><a href="Background.html">Background</a></li>
+  <li><a class="final" href="About.html">About</a></li>
 </ul>
 </div>
 
-<!-- \/\/\/\/\ Add Introduction -->	
-<div style="padding-left:16px">
-  <p>Some Intro.....</p>
+<!-- +++++++ Add Introduction -->	
+<div class="boxUnit2">
+  <div class="boxUnitTitle">How does this work?
+  </div>
+  <!-- Steps 1-5 -->	
+  <!-- Do *NOT* edit the spaces/line changes here, whitespace in the following div shows as whitespace on the page, has been edited accordingly -->	
+  <div class="standardBodyText" style="width:55%;white-space:pre;margin:auto;"
+     ><div class="stepOrdinal" style="border:3px solid #D0FFC7;">1</div> ----------- Make a disease cluster selection from the list below.
+  <br><div class="stepOrdinal" style="border:3px solid #B9FFAB;">2</div> ----------- The Bubble-Chart will show you which drugs are able to
+                             treat the most diseases within your chosen cluster.
+  <br><div class="stepOrdinal" style="border:3px solid #9AFF85;">3</div> ----------- The Sortable Bar-Chart will show you the frequency with
+                             which these cluster-specific drugs appear in clinical trials
+  <br><div class="stepOrdinal" style="border:3px solid #7EFF63;">4</div> ----------- With this, you might be able to infer whether being
+                             a more multi-functional drug translates to being more 
+                             common clinically.
+  <br><div class="stepOrdinal" style="border:3px solid #60FF3F;">5</div> ----------- Lastly, you can view an overview of all this information
+                             in the Zoomable diagram at the bottom.
+  </div>
 </div>
 
 <!-- Cluster Selection Panel -->
@@ -62,20 +77,21 @@
 <div class="selection">
   Select a disease cluster
   <div id="outer">
-    <div class="inner"><button class="disCategory" onclick=chooseClust("mood")>Mood disorders</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("heart")>Heart diseases</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("anxiety")>Anxiety disorders</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("brain")>Brain diseases</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("inflam")>Inflammatory diseases</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("lung")>Lung diseases</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("kidney")>Kidney diseases</button></div>
-    <div class="inner"><button class="disCategory" onclick=chooseClust("bone")>Bone diseases</button></div>
+    <!-- Issue with mood disorders - to discuss -->
+    <!-- <div class="inner"><button class="disCategory" onclick="chooseClust('mood')">Mood disorders</button></div> -->
+    <div class="inner"><button class="disCategory" onclick="chooseClust('heart disease')">Heart diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick="chooseClust('anxiety disorder')">Anxiety disorders</button></div>
+    <div class="inner"><button class="disCategory" onclick="chooseClust('brain diseases')">Brain diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick="chooseClust('inflammatory disease')">Inflammatory diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick="chooseClust('lung disease')">Lung diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick="chooseClust('kidney disease')">Kidney diseases</button></div>
+    <div class="inner"><button class="disCategory" onclick="chooseClust('bone disease')">Bone diseases</button></div>
   </div>
 </div>  
 
 <!-- Space for Bubble Chart -->	
 <!-- |--- /\/\/\/\/\ figure out how to center! -->
-<div id="chart" margin="center"></div>
+<div id="chart" style="text-align:center;"></div>
 		
 <script>
 	// Dummy Dataset for testing (remove at end)
@@ -100,7 +116,7 @@
 		// Extract data from input
 		data = {};
 		// restructure the asyncrounos response by creating a map of protein names and PDB counts
-		data.children = dataset.map(function(item) { return { "Name": item.protein , "Count": item.count } });
+		data.children = dataset.map(function(item) { return { "Name": item.name , "Count": item.value } });
 
 		var width = 1200;
 		var height = 800;
@@ -109,7 +125,7 @@
 		var svg = d3.select('#chart').append('svg')
 				  .attr('width', width)
 				  .attr('height', height)
-				  .attr('transform', 'translate(0,0)');
+				  .attr('transform', 'translate(200,0)');
 
 		var color = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -120,7 +136,7 @@
 				  .padding(5);
 
 		var nodes = d3.hierarchy(data)
-				  .sum(function(d) { return d.Count; });
+				  .sum(function(d) { return d.Count*d.Count; });
 
 		// Create the bubbles
 		circles = svg.selectAll("g")
@@ -147,10 +163,14 @@
 				.style("text-anchor", "middle")
 				.attr("font-family", "sans-serif")
 				.attr("font-size", function(d){
-					return d.r/8;
+					return d.r/5;
 				})
 				.text(function(d) {
-					return d.data.Name.substring(0, d.r / 3);
+                                        if(d.data.Name === "levofloxacin hemihydrate") {
+						return d.data.Name.substring(0, d.r/5);
+					} else {
+					return d.data.Name.substring(0, d.r/2);
+					}
 				});
 
 		// Add the text to the bubbles
@@ -158,11 +178,11 @@
 			  .attr("dy", "1.3em")
 			  .style("text-anchor", "middle")
 			  .text(function(d) {
-				  return "PDB count: " + d.data.Count;
+				  return "Diseases: " + d.data.Count;
 			  })
 			  .attr("font-family", "sans-serif")
 			  .attr("font-size", function(d){
-				  return d.r/8;
+				  return d.r/5;
 			  })
 	}
 </script>
@@ -170,7 +190,7 @@
   
 <div class="chartB">
 <script>
-	// \/\/\/\/\/\/ Sortable Bar Chart 
+	// \/\/\/\/\/\/ Sortable Bar Chart
 </script>	
 </div>  
 
@@ -200,18 +220,19 @@
 		 ?disorder wdt:P279 ?diseaseCluster.
 		 ?disorder wdt:P2176 ?drug.
 		 SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-	     } LIMIT 5`;	    
+	     }`;	    
 	const url = wdk.sparqlQuery(query)
 	
 	async function main () {  
 	  const response = await fetch(url)
 	  const results = await response.json()
 	  const simpleResults = wdk.simplify.sparqlResults(results)
-	  
+	  // document.getElementById('output').innerHTML = JSON.stringify(simpleResults, undefined, 2);
+
 	  // Full query results stored in wikiDataArray
 	  wikiDataArray = simpleResults;
 	  // Outputs query results as basic text display - to eventually be replaced with visualisation 	
-	  document.getElementById('output').innerHTML = JSON.stringify(simpleResults, undefined, 2);
+	  // document.getElementById('output').innerHTML = JSON.stringify(simpleResults, undefined, 2);
 	}
 	
 	//
@@ -221,12 +242,32 @@
 	
 	// Runs upon button press i.e. cluster selection
 	function chooseClust(choice) {
-	// Data preparation	
-	// |---- /\/\/\/\/\ Selectively extract parts of wikiDataArray based on cluster
+        // Data preparation	
+	// |---- +++++++++ Selectively extract objects of wikiDataArray based on cluster
 	// |---- /\/\/\/\/\ Produce output variable 'dataset' compatible with Bubble Chart input (See makeBubble())	
 	
+        // Selectively extract objects of wikiDataArray based on cluster
+        let clusterSpecificArray = wikiDataArray.filter(function(sample) {
+            return sample.diseaseClusterLabel == choice.replace("'", "\"");
+            }); 
+        // document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray, undefined, 2);
+
+	// Convert clusterSpecificArray into name-value pairs
+	let nameValuePairs = [];
+	let drugNum = 0;	
+	for(let i = 0; i < clusterSpecificArray.length; i++) {	
+	  if(!nameValuePairs.some(e => e.name === clusterSpecificArray[i].drugLabel)) {	  
+	    nameValuePairs[drugNum] = {"name": clusterSpecificArray[i].drugLabel, "value":1}
+	    drugNum++; 	    
+	  } else {
+	    let index = nameValuePairs.findIndex(drug => drug.name === clusterSpecificArray[i].drugLabel);
+	    nameValuePairs[index].value++;	  
+	  }	  
+	}
+	document.getElementById('output').innerHTML = JSON.stringify(nameValuePairs, undefined, 2);
+
 	// ++++++ Make bubble chart corresponding to dataset    
-	makeBubble(dataset);
+	makeBubble(nameValuePairs);
 	    
 	// Run bio2rdf query based on dataset
 	// |---- /\/\/\/\/\ Replace drugName with set of drugNames from previous query
@@ -241,12 +282,12 @@
 	const response2 = await fetch(url2)
 	const results2 = await response2.json()
 	const simpleResults2 = wbk.simplify.sparqlResults(results2)
-	document.getElementById('output').innerHTML =
+	// document.getElementById('output').innerHTML =
 		// /\/\/\/\/\ Output data in a way that works for Sortable Bar Chart
-		JSON.stringify(simpleResults2, undefined, 2);
+		// JSON.stringify(simpleResults2, undefined, 2);
 	        }
 	main2();	  
-
+        }
 </script>
 
 </body>
