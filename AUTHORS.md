@@ -1,3 +1,3 @@
-Hannah Schultheiss
-Lucas Reed
-Kabir Arora
+* Hannah Schultheiss
+* Lucas Reed
+* Kabir Arora
