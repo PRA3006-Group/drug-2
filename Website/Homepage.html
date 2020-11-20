@@ -188,6 +188,9 @@
   
 <div class="chartB">
 <script>
+	function makeBarChart(dataset) {
+		
+	}
 	// \/\/\/\/\/\/ Sortable Bar Chart
 </script>	
 </div>  
@@ -271,8 +274,10 @@
 	// Run bio2rdf query based on dataset
 	// |---- /\/\/\/\/\ Replace drugName with set of drugNames from previous query
 
-        let clusterSpecificArray_clinicalTrials= []; let counter = 0;
-
+        // Initialise clinical trial dataset
+	let clusterSpecificArray_clinicalTrials= []; let counter = 0;
+	
+	// Loop query over drugs belonging to cluster
         for (let i=0; i< nameValuePairs.length;i++) {		
 
           let query2 = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
@@ -290,29 +295,22 @@
 	    const simpleResults2 = wbk.simplify.sparqlResults(results2)
             clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults2.length};
 	    counter--;  
-	    // document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
 	        } 	 
-	clinicalData2(i, url2); counter++;
-	// document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
-        }	
-      
-	function printData() {
-	   if (counter==0) {
-	       	document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 	
-	  } else {
-	  	setTimeout(printData, 300);
-	 }
-	}
-
-        printData();
-
-	//function sortAscending (a,b) {
-        //  return a > b ? 1 :b > a ? -1 :0;
-        //}
-        //clusterSpecificArray_clinicalTrials.sort(sortAscending);
-        //document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);  
-}
 		
+	// Call async function with current loop iteration and current url2 value
+	clinicalData2(i, url2); counter++;
+        }
+	
+	// Wait until async funciton queries have finished
+	setTimeout(sortData, 2000);
+	
+	// Sort through number of clinical trials and send top 20 to makeBarChart 
+	function sortData() {
+		clusterSpecificArray_clinicalTrials.sort((a,b) => (a.value<b.value)?1 : (b.value<a.value)? -1 : 0);
+		makeBarChart(clusterSpecificArray_clinicalTrials.slice(0,19));
+	}
+}
+
 </script>
 
 </body>
