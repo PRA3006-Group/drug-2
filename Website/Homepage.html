@@ -285,7 +285,7 @@
 	    const response2 = await fetch(url2)
 	    const results2 = await response2.json()
 	    const simpleResults2 = wbk.simplify.sparqlResults(results2)
-            clusterSpecificArray_clinicalTrials[i]= {"name": clusterSpecificArray[i].drugLabel, "value": simpleResults2.length}
+            clusterSpecificArray_clinicalTrials[i]= {"name": nameValuePairs[i].drugLabel, "value": simpleResults2.length}
             document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 
 	        }
 	  main2();
