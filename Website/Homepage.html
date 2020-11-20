@@ -187,10 +187,70 @@
 	}
 </script>
 
-  
+	
 <div class="chartB">
 <script>
-	// \/\/\/\/\/\/ Sortable Bar Chart
+//!-- \/\/\/\/\/\/ Sortable Bar Chart
+	
+	function makeBarChart(datasetBar) {
+		// Remove previous chart
+		document.getElementById("chartB").innerHTML = "";
+//Testing dataset
+datasetBar = [ {protein: "Cyclin dependent kinase 2", count: 10},
+					{protein: "Beta-secretase 1", count: 20},
+					{protein: "DNA polymerase beta", count: 30},
+					{protein: "Carbonic anhydrase 2", count: 40},
+					{protein: "Beta-2-microglobulin", count: 50},
+					{protein: "Coagulation factor II, thrombin", count: 60},
+					{protein: "Hemoglobin subunit alpha 2", count: 70}];
+		     
+data = dataset.map(function(item) { return :{"name: item.disease, "value": item.count} } )
+
+
+var height = 700;
+var width = 1800;
+
+var svg = d3.select("body").append("svg")
+		.attr("viewBox", [0, 0, width, height]);
+			  
+margin = ({top: 20, right: 0, bottom: 30, left: 40});
+				
+xAxis = g => g
+		.attr("transform", `translate(0,${height - margin.bottom})`)
+		.style("text-anchor", "middle", "rotate(-90)")
+		.call(d3.axisBottom(x).tickSizeOuter(0));
+			
+yAxis = g => g
+		.attr("transform", `translate(${margin.left},0)`)
+		.call(d3.axisLeft(y))
+		.call(g => g.select(".domain").remove());
+				  
+x = d3.scaleBand()
+		.domain(data.map(d => d.name))
+		.range([margin.left, width - margin.right])
+		.padding(0.1);
+			
+y = d3.scaleLinear()
+		.domain([0, d3.max(data, d => d.value)]).nice()
+		.range([height - margin.bottom, margin.top]);
+
+svg.append("g")
+		.attr("fill", "steelblue")
+		.selectAll("rect")
+		.data(data)
+		.enter().append("rect")
+			.attr("x", d => x(d.name))
+			.attr("y", d => y(d.value))
+			.attr("height", d => y(0) - y(d.value))
+			.attr("width", x.bandwidth());
+			
+svg.append("g")	
+		.call(xAxis);
+
+svg.append("g")
+		.call(yAxis);
+	
+	    } 
 </script>	
 </div>  
 
@@ -268,6 +328,9 @@
 
 	// ++++++ Make bubble chart corresponding to dataset    
 	makeBubble(nameValuePairs);
+		
+	//------ Make Sortable Bar chart   (unfinished)
+	makeBarChart(datasetBar);
 	    
 	// Run bio2rdf query based on nameValuePairs containing all drugs associated with a specific disease cluster
 	let clusterSpecificArray_clinicalTrials= [];
