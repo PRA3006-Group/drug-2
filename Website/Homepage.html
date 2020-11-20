@@ -269,24 +269,29 @@
 	// ++++++ Make bubble chart corresponding to dataset    
 	makeBubble(nameValuePairs);
 	    
-	// Run bio2rdf query based on dataset
-	// |---- /\/\/\/\/\ Replace drugName with set of drugNames from previous query
-	let query2 = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
+	// Run bio2rdf query based on nameValuePairs containing all drugs associated with a specific disease cluster
+	let clusterSpecificArray_clinicalTrials= [];
+        for (let i=0; i< nameValuePairs.length;i++) {
+	  //Bio2RDF query retrieving the clinical trials associated with a specific drug
+          let query2 = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
                       SELECT DISTINCT ?drug ?article
 		      WHERE {
-  		          ?drug dcterms:title "febuxostat"@en.  #the specific drug we are searching for
+  		          ?drug dcterms:title "${nameValuePairs[i].name}"@en.  
   		          ?article cv:intervention ?drug.
-     		      }`; //Problem - discuss - I think drugName does not work	    
-	const url2 = wbk.sparqlQuery(query2)
-	async function main2 () {       
-	const response2 = await fetch(url2)
-	const results2 = await response2.json()
-	const simpleResults2 = wbk.simplify.sparqlResults(results2)
-	// document.getElementById('output').innerHTML =
-		// /\/\/\/\/\ Output data in a way that works for Sortable Bar Chart
-		// JSON.stringify(simpleResults2, undefined, 2);
+     		      }`;
+          const url2 = wbk.sparqlQuery(query2)
+	  async function main2 () {       
+	    const response2 = await fetch(url2)
+	    const results2 = await response2.json()
+	    const simpleResults2 = wbk.simplify.sparqlResults(results2)
+	    
+	    //clusterSpecificArray_clinicalTrials contains the number of trials associated with the drugs from a specific disease cluster
+            clusterSpecificArray_clinicalTrials[i]= {"name": nameValuePairs[i].name, "value": simpleResults2.length}
+            document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 
 	        }
-	main2();	  
+	  main2();
+        }	
+           	  
         }
 </script>
 
