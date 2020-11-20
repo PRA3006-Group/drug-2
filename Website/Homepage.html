@@ -211,7 +211,7 @@
 <script>
   // SECTION 1: Does not vary with user cluster selection, runs once at the beginning
 	let wikiDataArray = [];		  
-	  
+	let bio2RDFArray= [];  
 	// Wikidata query
 	// |---- ++++++++++ Obtains Cluster->Drug->Disorder objects for ALL clusters
 	query = `SELECT DISTINCT  ?drugLabel ?disorderLabel ?diseaseClusterLabel
@@ -285,13 +285,21 @@
 	    const response2 = await fetch(url2)
 	    const results2 = await response2.json()
 	    const simpleResults2 = wbk.simplify.sparqlResults(results2)
-            clusterSpecificArray_clinicalTrials[i]= {"name": nameValuePairs[i].drugLabel, "value": simpleResults2.length}
-            document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 
+            bio2RDFArray= simpleResults2;
 	        }
 	  main2();
+          document.getElementById('output').innerHTML = JSON.stringify(bio2RDFArray, undefined, 2); 
+          clusterSpecificArray_clinicalTrials[i]= {"name": nameValuePairs[i].name, "value": bio2RDFArray.length}
         }	
-           
-        }
+        document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 
+
+
+        //function sortAscending (a,b) {
+        //  return a > b ? 1 :b > a ? -1 :0;
+        //}
+        //clusterSpecificArray_clinicalTrials.sort(sortAscending);
+        //document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);  
+      }
 </script>
 
 </body>
