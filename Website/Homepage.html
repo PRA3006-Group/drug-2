@@ -66,8 +66,6 @@
   <br><div class="stepOrdinal" style="border:3px solid #7EFF63;">4</div> ----------- With this, you might be able to infer whether being
                              a more multi-functional drug translates to being more 
                              common clinically.
-  <br><div class="stepOrdinal" style="border:3px solid #60FF3F;">5</div> ----------- Lastly, you can view an overview of all this information
-                             in the Zoomable diagram at the bottom.
   </div>
 </div>
 
@@ -232,11 +230,12 @@
 	  // Full query results stored in wikiDataArray
 	  wikiDataArray = simpleResults;
 	  // Outputs query results as basic text display - to eventually be replaced with visualisation 	
-	  // document.getElementById('output').innerHTML = JSON.stringify(simpleResults, undefined, 2);
+	  
 	}
 	
 	//
 	main();
+
         
   // SECTION 2: Varies with cluster  selection
 	
@@ -264,7 +263,7 @@
 	    nameValuePairs[index].value++;	  
 	  }	  
 	}
-	document.getElementById('output').innerHTML = JSON.stringify(nameValuePairs, undefined, 2);
+	// document.getElementById('output').innerHTML = JSON.stringify(nameValuePairs, undefined, 2);
 
 	// ++++++ Make bubble chart corresponding to dataset    
 	makeBubble(nameValuePairs);
@@ -272,34 +271,48 @@
 	// Run bio2rdf query based on dataset
 	// |---- /\/\/\/\/\ Replace drugName with set of drugNames from previous query
 
-        let clusterSpecificArray_clinicalTrials= [];
-        for (let i=0; i< nameValuePairs.length;i++) {
+        let clusterSpecificArray_clinicalTrials= []; let counter = 0;
+
+        for (let i=0; i< nameValuePairs.length;i++) {		
+
           let query2 = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
                       SELECT DISTINCT ?drug ?article
 		      WHERE {
   		          ?drug dcterms:title "${nameValuePairs[i].name}"@en.  #the specific drug we are searching for
   		          ?article cv:intervention ?drug.
      		      }`;
+
           const url2 = wbk.sparqlQuery(query2)
-	  async function main2 () {       
+
+	  async function clinicalData2 (iter, url2) {       
 	    const response2 = await fetch(url2)
 	    const results2 = await response2.json()
 	    const simpleResults2 = wbk.simplify.sparqlResults(results2)
-            bio2RDFArray= simpleResults2;
-	        }
-	  main2();
-          document.getElementById('output').innerHTML = JSON.stringify(bio2RDFArray, undefined, 2); 
-          clusterSpecificArray_clinicalTrials[i]= {"name": nameValuePairs[i].name, "value": bio2RDFArray.length}
+            clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults2.length};
+	    counter--;  
+	    // document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
+	        } 	 
+	clinicalData2(i, url2); counter++;
+	// document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
         }	
-        document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 
+      
+	function printData() {
+	   if (counter==0) {
+	       	document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2); 	
+	  } else {
+	  	setTimeout(printData, 300);
+	 }
+	}
 
+        printData();
 
-        //function sortAscending (a,b) {
+	//function sortAscending (a,b) {
         //  return a > b ? 1 :b > a ? -1 :0;
         //}
         //clusterSpecificArray_clinicalTrials.sort(sortAscending);
         //document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);  
-      }
+}
+		
 </script>
 
 </body>
