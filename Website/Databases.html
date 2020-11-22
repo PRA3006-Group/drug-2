@@ -15,11 +15,76 @@
 <div class="bar">
 <ul>
   <li><a href="Homepage.html">Home</a></li>
-  <li><a class="current" href="Databases.html">Databases</a></li>
   <li><a href="Background.html">Background</a></li>
+  <li><a class="current" href="Databases.html">Databases</a></li>
   <li><a class="final" href="About.html">About</a></li>
 </ul>
 </div>
+
+<div class="boxUnit" style="padding:30px 80px 30px 80px">
+  <span class="standardBodyText">This website is based on SPARQL queries from Wikidata and Bio2RDF.</span>
+</div>
+
+<div class="boxUnit">
+  <span class="boxUnitTitle">&ensp; What is SPARQL? &ensp;</span>
+  <hr style="width:56%">
+  <span class="standardBodyText"><b>S</b>parql <b>P</b>rotocol <b>A</b>nd <b>R</b>DF <b>Q</b>uery <b>L</b>anguage</span>
+  <br> <br>
+  <span>The internet is full of scientific and non-scientific databases with immense volumes of data ready available to users. Unfortunately,
+        <br> such databases would be meaningless (or incredibly painful to use) without orderly, systematic methods of accessing them. SPARQL
+        <br> is a Semantic Query Language - it provides intuitive, simplistic ways to access desired data from compatible databases, that
+        <br> is, databases with a SPARQL endpoint. </span>
+  <br> <br>
+  <span>Specifically, SPARQL is able to extract data stored in the Resource Database Framework (RDF) format. The core idea of this format
+        <br> is storing entire networks of data with respect to organised and labelled relationships - making it easy to search for data points   
+        <br> that belong to a particular class, or share a particular feature. The tutorial we used to understand SPARQL principles can be found <a target="_blank" href="https://bigcat-um.github.io/SPARQLTutorialBioSB2019/">here</a>.</span>
+</div>  
+
+<div class="boxUnit">
+  <span class="boxUnitTitle">&ensp; Our Data Structure &ensp;</span>
+  <hr style="width:62%">
+  <span class="standardBodyText">Where do we get our information?</span>
+  <br> <br>
+  <span>The drug multi-functionality information we display on our Homepage is a product of two main sources: Wikidata and Bio2RDF. We
+        <br> request different sets of data from each of these databases, the former being responsible for providing drugs relevant to a 
+        <br> disease cluster, and the latter providing clinical trial data corresponding to those drugs. </span>
+  <br> <br>
+  <span>In short, our usage of queries and databases can be summarised visually as follows: <br><br></span>
+  <div class="figure"style="width:70%;">
+    <br> <br> <img src="images\datapath.png" alt="" width="80%" /><br><br><br><br><span class="caption">Our implementation of SPARQL<br></span>
+  </div>  
+</div> 
+
+<div class="boxUnit" style="font-size:1.3em; padding: 40px 0px 40px 0px;">
+  Now that we have our main data path clear, we can explore the databases we're obtaining that information from.
+</div>
+
+<div class="boxUnit">
+  <span class="boxUnitTitle">&ensp; Wikidata &ensp;</span>
+  <hr style="width:38%">
+  <span class="standardBodyText">SPARQL Endpoint: https://query.wikidata.org/sparql</span>
+  <br> <br>
+  <span>Wikidata is a large-scale source of information, stored in a format compatible with our queries. It stores "items", each with serialised
+        <br> links and relationships to other "items" - an advantage it provides is a dedicated page to each item, providing the user with a visual
+        <br> tabulation of the item's position in its network of data. You can find more on Wikidata <a target="_blank" href="https://www.wikidata.org/wiki/Wikidata:Main_Page">here</a>.</span></span>
+  <br> <br>
+  <span>Here is an example of how Wikidata represents such items to the user:<br><br><br></span>
+  <div class="figure" style="width:60%;">
+    <br> <br> <img src="images\WikidataExample.png" alt="" width="90%" /><br><br><span class="caption">Wikidata Item Page Example <em>(Wikipedia)</em><br></span>
+  </div>  
+</div> 
+  
+<div class="boxUnit">
+  <span class="boxUnitTitle">&ensp; Bio2RDF &ensp;</span>
+  <hr style="width:36%">
+  <span class="standardBodyText">SPARQL Endpoint: https://bio2rdf.org/sparql</span>
+  <br> <br>
+  <span>Like Wikidata, Bio2RDF stores data using RDF, but focuses more on biological data, containing information from literature and publications.
+        <br> Its data is organised into 35 unique datasets, each with a specific focus. The database we make use of is clinicaltrails.gov, which
+        <br> contains data about clinical studies around the world. </span>
+  <br> <br>
+  <span>You can find more on bio2RDF <a target="_blank" href="https://github.com/bio2rdf/bio2rdf-scripts/wiki">here</a>, and more on our specific dataset <a target="_blank" href="https://clinicaltrials.gov/">here</a></span>  
+</div> 
 
 </body>
 </html>
