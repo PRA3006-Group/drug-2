@@ -12,7 +12,7 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
 
   <!-- Title -->	
-  <div class="titl">
+  <div class="title">
     <head>
       Drug<sup>2</sup> - A multi-functionality visualizer for medical drugs
     </head>
@@ -203,7 +203,7 @@
 			data = dataset.map(function(item) { return {"name": item.name, "value": item.value} } )
 			
 			var height = 700;
-			var width = 800;
+			var width = 1800;
 			
 			var svg = d3.select("#chartB").append("svg")
 						  .attr("viewBox", [0, 0, width, height]);
