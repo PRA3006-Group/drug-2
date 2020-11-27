@@ -4,11 +4,9 @@
 /* ----------------------------------------- */
 
 .titl {
-  margin: 0px;
   width: calc(100%);
   height: 55px;
   background-color: #00ace6;
-  text-color: blue;
   text-align: center;
   font-size: calc(200%);
   font-family: 'DM Sans';
@@ -36,7 +34,6 @@ ul {
 
 li a {
   display: block;
-  padding: 8px;
   background-color: #99c2ff;
   color: #000000;
   padding: 14px 16px;
@@ -45,11 +42,7 @@ li a {
 }
 
 li a.current {
-  display: block;
-  padding: 8px;
   background-color: #00ace6;
-  padding: 14px 16px;
-  text-decoration: none;
 }
 
 li a.final {
@@ -75,6 +68,7 @@ li a:hover {
   line-height: 10px;
   height: 100px;
   text-align: center;
+
   transition-property: border-color, border-style, border-width;
   transition-duration: 0.3s;
 }
@@ -93,12 +87,13 @@ li a:hover {
 }
 
 .caption {
-  font-size: 1.3em;
+  font-size: 1.2em;
 }
 
 .standardBodyText {
   font-size: 1.3em;
 }
+
 
 /* -------------------------------------------- */
 /*  Style elements that apply only to Homepage  */
@@ -120,9 +115,8 @@ li a:hover {
 }  
 
 .buttonRowHolder {
-    width:100%;
-    text-align: center;
-    line-height: 0px;
+  text-align: center;
+  line-height: 0px;
 }
 
 .clusterButton {
@@ -131,7 +125,8 @@ li a:hover {
   border: none;
   font-size: 16px;
   font-family: 'DM Sans';
-  padding: 5px 10px;	
+  padding: 5px 10px;
+	
   transition: transform 330ms ease-in-out;
   display: inline-block;
 }
@@ -140,17 +135,29 @@ li a:hover {
   transform:scale(1.3,1.3);
 }
 
-/* --------------------------------------------- */
+.legend {
+  text-align: left;
+  font-size: 1.3em;
+  display:inline-block;
+}
+
+#legendLabel {
+  font-size: 1.3em;
+}
+
+/* ----------------------------------------- */
 /*  Style elements that apply only to About  */
-/* --------------------------------------------- */
+/* ----------------------------------------- */
 
 .photos img {
-    display: inline-block;
     width: 250px;
     height: 250px;
 }
 
 /* Give the photos a corner border */
+/* Adapted from Arkej, 2017 - */ 
+/* https://stackoverflow.com/questions/42832749/create-corner-border-in-css */
+
 .photoBor {
     position: relative;
     width: 250px;
@@ -165,7 +172,7 @@ li a:hover {
     height: 50px;
     position: absolute;
     top: -25px;
-    right: 25px;
+    right: 40px;
     border-top: 15px solid #696969;
     border-right: 15px solid #696969;
 }
@@ -177,15 +184,17 @@ li a:hover {
     height: 50px;
     position: absolute;
     bottom: -25px;
-    left: 50px;
+    left: 40px;
     border-bottom: 15px solid #696969;
     border-left: 15px solid #696969;
 }
 
-/* Center the line of three photos */
+/* Line and Center the three photos */
 .photos {
   display: flex;
 }
+
 .photos > div {
   flex: 1; /*grow*/
 }
+
