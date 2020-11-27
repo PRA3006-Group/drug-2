@@ -89,7 +89,7 @@
 
 <!-- Bubble Chart -->	
 <!-- |--- ++++++++ figure out how to center! -->
-<div class="boxUnit">
+<div class="boxUnit" style="border-width: 10px 10px 10px 10px">
   <span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug treats more diseases? &ensp;</span>
   <!-- #chart div for SVG element of makeBubble() -->
   <div id="chart" style="text-align:center;">
@@ -315,22 +315,21 @@
 		 ?disorder wdt:P2176 ?drug.
 		 SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 	     }`;	    
-	const url = wdk.sparqlQuery(query)
+	const url_W = wdk.sparqlQuery(query)
 	
-	async function main () {  
-	  const response = await fetch(url)
-	  const results = await response.json()
-	  const simpleResults = wdk.simplify.sparqlResults(results)
-	  // document.getElementById('output').innerHTML = JSON.stringify(simpleResults, undefined, 2);
+	async function wikiDataQueryFunc () {  
+	  const response_W = await fetch(url_W)
+	  const results_W = await response_W.json()
+	  const simpleResults_W = wdk.simplify.sparqlResults(results_W)
 
 	  // Full query results stored in wikiDataArray
-	  wikiDataArray = simpleResults;
+	  wikiDataArray = simpleResults_W;
 	  // Outputs query results as basic text display - to eventually be replaced with visualisation 	
 	  
 	}
 	
 	// Run query, get wikiData data
-	main();
+	wikiDataQueryFunc();
 
         
   // SECTION 2: Varies with cluster selection
@@ -384,18 +383,18 @@
   		          ?article cv:intervention ?drug.
      		      }`;
 
-          const url2 = bio2r.sparqlQuery(query2)
+          const url_B = bio2r.sparqlQuery(query2)
 
-	  async function clinicalData2 (iter, url2) {       
-	    const response2 = await fetch(url2)
-	    const results2 = await response2.json()
-	    const simpleResults2 = bio2r.simplify.sparqlResults(results2)
-            clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults2.length};
+	  async function bio2rdfQueryFunc (iter, url_B) {       
+	    const response_B = await fetch(url_B)
+	    const results_B = await response_B.json()
+	    const simpleResults_B = bio2r.simplify.sparqlResults(results_B)
+            clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults_B.length};
 	    counter--;  
 	        } 	 
 		
 	// Run sparql query with current loop iteration and current url2 value
-	clinicalData2(i, url2); counter++;
+	bio2rdfQueryFunc(i, url_B); counter++;
         }
 	
 	// Wait until async funciton queries have finished
