@@ -186,17 +186,106 @@
 	}
 </script>
 
-<!-- Space for Bar Chart -->	
-<!-- |--- /\/\/\/\/\ Add legend --> 
+<!-- Space for Bar Chart -->
+
 <div class="boxUnit"><span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug has had more trials? &ensp;</span>
-<script>
-	function makeBarChart(dataset) {
-		
-	}
-	// \/\/\/\/\/\/ Sortable Bar Chart
-</script>	
+  <br><br><br>
+  <div id="chartB"></div>
+  
+  <div class="legend" id="AtoE" style="width:33%;text-align:center;">
+    <div id="A"></div>
+    <div id="B"></div>
+    <div id="C"></div>
+    <div id="D"></div>
+    <div id="E"></div>
+  </div>
+  
+  <div class="legend" id="FtoJ" style="width:33%;text-align:center;">
+    <div id="F"></div>
+    <div id="G"></div>
+    <div id="H"></div>
+    <div id="I"></div>
+    <div id="J"></div>
+  </div>
+
+  <div class="legend" id="KtoO" style="width:33%;text-align:center;">
+    <div id="K"></div>
+    <div id="L"></div>
+    <div id="M"></div>
+    <div id="N"></div>
+    <div id="O"></div>
+  </div>
+
 </div>  
 
+<script>
+
+labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"];
+        
+	function makeBarChart(dataset) {
+                
+		// PART 1: Make Bar Chart (to be shown in div class="chartB")
+			// Remove previous chart
+			document.getElementById("chartB").innerHTML = "";
+
+			for(let i=0; i<15; i++) {
+			  dataset[i].label = labelArray[i]; 
+			}
+
+			data = dataset.map(function(item) { return {"name": item.label, "value": item.value} } )
+			
+			var height = 400;
+			var width = 1000;
+			
+			var svg = d3.select("#chartB").append("svg")
+						  .attr("viewBox", [0, 0, width, height]);
+			  
+			margin = ({top: 20, right: 160, bottom: 30, left: 200});
+				
+			xAxis = g => g
+						.attr("transform", `translate(0,${height - margin.bottom})`)
+						.style("text-anchor", "middle", "rotate(-90)")
+						.call(d3.axisBottom(x).tickSizeOuter(0));
+			
+			yAxis = g => g
+						.attr("transform", `translate(${margin.left},0)`)
+						.call(d3.axisLeft(y))
+						.call(g => g.select(".domain").remove());
+				  
+			x = d3.scaleBand()
+						.domain(data.map(d => d.name))
+						.range([margin.left, width - margin.right])
+						.padding(0.1);
+			
+			y = d3.scaleLinear()
+						.domain([0, d3.max(data, d => d.value)]).nice()
+						.range([height - margin.bottom, margin.top]);
+
+			svg.append("g")
+				.attr("fill", "steelblue")
+				.selectAll("rect")
+				.data(data)
+				.enter().append("rect")
+					.attr("x", d => x(d.name))
+					.attr("y", d => y(d.value))
+					.attr("height", d => y(0) - y(d.value))
+					.attr("width", x.bandwidth());
+			
+			svg.append("g")	
+			  .call(xAxis);
+
+			svg.append("g")
+			  .call(yAxis);
+	
+		// Make legend
+		let drugNames = dataset.map(a => a.name)
+		for(let i = 0; i<15; i++) {
+		  document.getElementById(labelArray[i]).innerHTML = labelArray[i]+`: ${drugNames[i]}`;
+		}	
+		
+	}
+	
+</script>	
 	
 <!-- Display sparql query output in typewriter font - won't be needed in final version-->
 <pre id="output"></pre>	
@@ -304,9 +393,10 @@
 	// Sort through number of clinical trials and send top 20 to makeBarChart 
 	function sortData() {
 		clusterSpecificArray_clinicalTrials.sort((a,b) => (a.value<b.value)?1 : (b.value<a.value)? -1 : 0);
-		document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
-		makeBarChart(clusterSpecificArray_clinicalTrials.slice(0,19));
+		//document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
+		makeBarChart(clusterSpecificArray_clinicalTrials.slice(0,15));
 	}
+
 }
 
 </script>
