@@ -7,20 +7,22 @@
 <html lang="en">
 <head>
   <!-- Import relevant style elements -->
-  <link href='https://fonts.googleapis.com/css?family=DM%20Sans' rel='stylesheet'>
-  <link rel='stylesheet' href="stylesheet.css">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <!-- Font --> <link href='https://fonts.googleapis.com/css?family=DM%20Sans' rel='stylesheet'>
+  <!-- Stylesheet --> <link rel='stylesheet' href="stylesheet.css">
+  <!-- d3 library --> <script src="https://d3js.org/d3.v4.min.js"></script>
   
-  <title>Drug 2- A multi-functionality visualizer for medical drugs </title>
+  <title>Drug^2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Lines *22-*31 adapated from [add reference to egon pils link] -->
-  <!-- Initialize a global WBK function -->
+  <!-- Lines 18-27 adapated from Egon W., 2020 - https://github.com/egonw/pils/blob/master/day2.md -->
+    <!-- Initialize a global WBK function -->
     <script src="https://cdn.rawgit.com/maxlath/wikidata-sdk/dist/dist/wikibase-sdk.min.js"></script>
-    <!-- Initialize a global wdk object using the WBK object -->
+	
+    <!-- A: Use the WBK function to initialize a global wikidata object -->
     <script src="https://cdn.rawgit.com/maxlath/wikidata-sdk/dist/dist/wikidata-sdk.min.js"></script>
+    <!-- B: Use the WBK function to initialize a global bio2rdf object -->
     <script>
-      const wbk = new WBK({
+      const bio2r = new WBK({
         instance: 'https://bio2rdf.org/',
         sparqlEndpoint: 'https://bio2rdf.org/sparql'
       });
@@ -38,17 +40,16 @@
       Drug<sup>2</sup> - A multi-functionality visualizer for medical drugs
   </div>
 
-
 <!-- Navigation Bar -->
 <!-- |--- ++++++++++ Make interactive (hover colour)    -->	
-<!-- |--- /\/\/\/\/\ Add links to other webpages        -->	
+<!-- |--- ++++++++++ Add links to other webpages        -->	
 <div class="bar">
-<ul>
-  <li><a class="current" href="Homepage.html">Home</a></li>
-  <li><a href="Background.html">Background</a></li>
-  <li><a href="Databases.html">Databases</a></li>
-  <li><a class="final" href="About.html">About</a></li>
-</ul>
+  <ul>
+    <li><a class="current" href="Homepage.html">Home</a></li>
+    <li><a href="Background.html">Background</a></li>
+    <li><a href="Databases.html">Databases</a></li>
+    <li><a class="final" href="About.html">About</a></li>
+  </ul>
 </div>
 
 <!-- +++++++ Add Introduction -->	
@@ -74,47 +75,37 @@
 <div class="selection">
   Select a disease cluster
   <div class="buttonRowHolder">
-    <button class="clusterButton" onclick="chooseClust('heart disease')">Heart diseases</button>
-    <button class="clusterButton" onclick="chooseClust('anxiety disorder')">Anxiety disorders</button>
-    <button class="clusterButton" onclick="chooseClust('brain diseases')">Brain diseases</button>
-    <button class="clusterButton" onclick="chooseClust('inflammatory disease')">Inflammatory diseases</button>
-    <button class="clusterButton" onclick="chooseClust('lung disease')">Lung diseases</button>
-    <button class="clusterButton" onclick="chooseClust('kidney disease')">Kidney diseases</button>
-    <button class="clusterButton" onclick="chooseClust('bone disease')">Bone diseases</button>
+    <!-- Buttons: class to stylise; id to change style upon click, onclick function to implement corresponding queries and graphs -->	  
+    <button class="clusterButton" id="heart disease" onclick="chooseClust('heart disease')">Heart diseases</button>
+    <button class="clusterButton" id="anxiety disorder" onclick="chooseClust('anxiety disorder')">Anxiety disorders</button>
+    <button class="clusterButton" id="brain diseases" onclick="chooseClust('brain diseases')">Brain diseases</button>
+    <button class="clusterButton" id="inflammatory disease" onclick="chooseClust('inflammatory disease')">Inflammatory diseases</button>
+    <button class="clusterButton" id="lung disease" onclick="chooseClust('lung disease')">Lung diseases</button>
+    <button class="clusterButton" id="kidney disease" onclick="chooseClust('kidney disease')">Kidney diseases</button>
+    <button class="clusterButton" id="bone disease" onclick="chooseClust('bone disease')">Bone diseases</button>
   </div>
 </div>   
 
 
-<!-- Space for Bubble Chart -->	
+<!-- Bubble Chart -->	
 <!-- |--- ++++++++ figure out how to center! -->
-<div class="boxUnit"><span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug treats more diseases? &ensp;</span>
+<div class="boxUnit">
+  <span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug treats more diseases? &ensp;</span>
+  <!-- #chart div for SVG element of makeBubble() -->
   <div id="chart" style="text-align:center;">
   </div>
 </div>
 		
 <script>
-	// Dummy Dataset for testing (remove at end)
-		dataset = [ {protein: "Cyclin dependent kinase 2", count: 10},
-					{protein: "Beta-secretase 1", count: 20},
-					{protein: "DNA polymerase beta", count: 30},
-					{protein: "Carbonic anhydrase 2", count: 40},
-					{protein: "Beta-2-microglobulin", count: 50},
-					{protein: "Coagulation factor II, thrombin", count: 60},
-					{protein: "Hemoglobin subunit alpha 2", count: 70},
-					{protein: "Hemoglobin subunit beta", count: 80},
-					{protein: "Transthyretin", count: 90},
-					{protein: "insulin", count: 100}];
-		
-	// Bubble Chart Function (/\/\/\/\/\ Insert reference!)
-	// |--- +++++++ Accepts name-value paired object dataset
+	
+	// Bubble Chart Function, adapted from Egon W., 2020 - https://github.com/egonw/pils/tree/master/BubbleChart
 	// |--- +++++++ Overwrites previous chart when re-called upon button press
 	function makeBubble(dataset) {
 		// Remove previous chart
 		document.getElementById("chart").innerHTML = "";
 		
-		// Extract data from input
+		// Extract data from input, restructure the asynchronous response by creating a map of drug names and disease counts
 		data = {};
-		// restructure the asyncrounos response by creating a map of protein names and PDB counts
 		data.children = dataset.map(function(item) { return { "Name": item.name , "Count": item.value } });
 
 		var width = 1200;
@@ -128,8 +119,7 @@
 
 		var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-		// Create a new structure from the data where each element has coordinates corresponds
-		// to the size of the holding SVG
+		// Create a new structure from the data where each element has coordinates corresponding to the size of the holding SVG
 		var bubble = d3.pack(data)
 				  .size([height, height])
 				  .padding(5);
@@ -157,7 +147,7 @@
 					  return color(i);
 				})
 
-		// Add the text to the bubbles
+		// Add drug text to the bubbles
 		circles.append("text")
 				.style("text-anchor", "middle")
 				.attr("font-family", "sans-serif")
@@ -172,7 +162,7 @@
 					}
 				});
 
-		// Add the text to the bubbles
+		// Add disease number text to the bubbles
 		circles.append("text")
 			  .attr("dy", "1.3em")
 			  .style("text-anchor", "middle")
@@ -186,57 +176,73 @@
 	}
 </script>
 
-<!-- Space for Bar Chart -->
-
-<div class="boxUnit"><span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug has had more trials? &ensp;</span>
-  <br><br><br>
+<!-- Bar Chart -->
+<div class="boxUnit">
+  <span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug has had more trials? &ensp;</span>
+    <br><br><br>
+  <span id="yLabel" style="font-style:italic;"></span>
+    <br>
+  <!-- div chartB to add graph from makeBarChart() -->	
   <div id="chartB"></div>
-  
-  <div class="legend" id="AtoE" style="width:33%;text-align:center;">
-    <div id="A"></div>
-    <div id="B"></div>
-    <div id="C"></div>
-    <div id="D"></div>
-    <div id="E"></div>
-  </div>
-  
-  <div class="legend" id="FtoJ" style="width:33%;text-align:center;">
-    <div id="F"></div>
-    <div id="G"></div>
-    <div id="H"></div>
-    <div id="I"></div>
-    <div id="J"></div>
-  </div>
+    <br><br>
+        <!-- divs for Bar Chart labels, filled by makeBarChart() -->	
+	<div class="figure"> 
+	  <div id="legendLabel"></div>
+	    <br>
+		
+	  <div class="legend" id="AtoE" style="width:33%;text-align:center;">
+	    <div id="A"></div>
+	    <div id="B"></div>
+	    <div id="C"></div>
+	    <div id="D"></div>
+	    <div id="E"></div>
+	  </div>
 
-  <div class="legend" id="KtoO" style="width:33%;text-align:center;">
-    <div id="K"></div>
-    <div id="L"></div>
-    <div id="M"></div>
-    <div id="N"></div>
-    <div id="O"></div>
-  </div>
+	  <div class="legend" id="FtoJ" style="width:33%;text-align:center;">
+	    <div id="F"></div>
+	    <div id="G"></div>
+	    <div id="H"></div>
+	    <div id="I"></div>
+	    <div id="J"></div>
+	  </div>
 
+	  <div class="legend" id="KtoO" style="width:33%;text-align:center;">
+	    <div id="K"></div>
+	    <div id="L"></div>
+	    <div id="M"></div>
+	    <div id="N"></div>
+	    <div id="O"></div>
+	  </div>
+	</div>
+	
 </div>  
 
 <script>
-
-labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"];
+        labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"];
         
+	// Bar Chart Function, adapted from Egon W., 2020 - https://github.com/egonw/pils/blob/master/HistogramChart/index.html
+	// |--- +++++++ Builds array of drugNames to be used in legend divs
 	function makeBarChart(dataset) {
                 
 		// PART 1: Make Bar Chart (to be shown in div class="chartB")
 			// Remove previous chart
 			document.getElementById("chartB").innerHTML = "";
+		        // Add relevant text that doesn't need to be there before the barChart shows up
+			document.getElementById("yLabel").innerHTML = "Y axis represents number of clinical trials per drug";
+			document.getElementById("legendLabel").innerHTML = "Legend to the corresponding drugs";
 
+			// Add labelArray
 			for(let i=0; i<15; i++) {
 			  dataset[i].label = labelArray[i]; 
 			}
-
+                        
+		        // Map input dataset to name-value pairs
 			data = dataset.map(function(item) { return {"name": item.label, "value": item.value} } )
 			
 			var height = 400;
 			var width = 1000;
 			
+		        // Make barChart elements
 			var svg = d3.select("#chartB").append("svg")
 						  .attr("viewBox", [0, 0, width, height]);
 			  
@@ -277,12 +283,11 @@ labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "
 			svg.append("g")
 			  .call(yAxis);
 	
-		// Make legend
+		// PART 2: Make legend (to be shown in legend divs)
 		let drugNames = dataset.map(a => a.name)
 		for(let i = 0; i<15; i++) {
 		  document.getElementById(labelArray[i]).innerHTML = labelArray[i]+`: ${drugNames[i]}`;
 		}	
-		
 	}
 	
 </script>	
@@ -296,9 +301,11 @@ labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "
 
 <!-- SPARQL Query components -->	
 <script>
+	
   // SECTION 1: Does not vary with user cluster selection, runs once at the beginning
-	let wikiDataArray = [];		  
-	let bio2RDFArray= [];  
+	let wikiDataArray = [];	
+	const buttonIDs = ["heart disease", "anxiety disorder", "brain diseases", "inflammatory disease", "lung disease", "kidney disease", "bone disease"];
+	
 	// Wikidata query
 	// |---- ++++++++++ Obtains Cluster->Drug->Disorder objects for ALL clusters
 	query = `SELECT DISTINCT  ?drugLabel ?disorderLabel ?diseaseClusterLabel
@@ -322,23 +329,31 @@ labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "
 	  
 	}
 	
-	//
+	// Run query, get wikiData data
 	main();
 
         
-  // SECTION 2: Varies with cluster  selection
+  // SECTION 2: Varies with cluster selection
 	
-	// Runs upon button press i.e. cluster selection
-	function chooseClust(choice) {
+   // Runs upon button press i.e. cluster selection, calls bio2RDF query and calls graph functions
+   function chooseClust(choice) {
         // Data preparation	
 	// |---- +++++++++ Selectively extract objects of wikiDataArray based on cluster
-	// |---- /\/\/\/\/\ Produce output variable 'dataset' compatible with Bubble Chart input (See makeBubble())	
+	// |---- +++++++++ Produce output variable 'dataset' compatible with Bubble Chart input (See makeBubble())
+	// |---- +++++++++ Produce top-15 drug object array compatible with Bar Chart input (See makeBarChart())   
 	
+	// Set previously clicked buttons to base style
+	for(let i=0; i<7; i++) {
+	   document.getElementById(buttonIDs[i]).style["background-color"] = "#f2d9f2";	
+	}
+	
+	// Set currently clicked button to clicked style   
+	document.getElementById(choice.replace("'", "\"")).style["background-color"] = "#e699ff";	   
+	   
         // Selectively extract objects of wikiDataArray based on cluster
         let clusterSpecificArray = wikiDataArray.filter(function(sample) {
             return sample.diseaseClusterLabel == choice.replace("'", "\"");
-            }); 
-        // document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray, undefined, 2);
+        }); 
 
 	// Convert clusterSpecificArray into name-value pairs
 	let nameValuePairs = [];
@@ -352,13 +367,9 @@ labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "
 	    nameValuePairs[index].value++;	  
 	  }	  
 	}
-	// document.getElementById('output').innerHTML = JSON.stringify(nameValuePairs, undefined, 2);
 
 	// ++++++ Make bubble chart corresponding to dataset    
 	makeBubble(nameValuePairs);
-	    
-	// Run bio2rdf query based on dataset
-	// |---- /\/\/\/\/\ Replace drugName with set of drugNames from previous query
 
         // Initialise clinical trial dataset
 	let clusterSpecificArray_clinicalTrials= []; let counter = 0;
@@ -373,31 +384,31 @@ labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "
   		          ?article cv:intervention ?drug.
      		      }`;
 
-          const url2 = wbk.sparqlQuery(query2)
+          const url2 = bio2r.sparqlQuery(query2)
 
 	  async function clinicalData2 (iter, url2) {       
 	    const response2 = await fetch(url2)
 	    const results2 = await response2.json()
-	    const simpleResults2 = wbk.simplify.sparqlResults(results2)
+	    const simpleResults2 = bio2r.simplify.sparqlResults(results2)
             clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults2.length};
 	    counter--;  
 	        } 	 
 		
-	// Call async function with current loop iteration and current url2 value
+	// Run sparql query with current loop iteration and current url2 value
 	clinicalData2(i, url2); counter++;
         }
 	
 	// Wait until async funciton queries have finished
 	setTimeout(sortData, 3000);
 	
-	// Sort through number of clinical trials and send top 20 to makeBarChart 
+	// Sort through number of clinical trials and send top 15 to makeBarChart 
 	function sortData() {
 		clusterSpecificArray_clinicalTrials.sort((a,b) => (a.value<b.value)?1 : (b.value<a.value)? -1 : 0);
 		//document.getElementById('output').innerHTML = JSON.stringify(clusterSpecificArray_clinicalTrials, undefined, 2);
 		makeBarChart(clusterSpecificArray_clinicalTrials.slice(0,15));
 	}
 
-}
+  }
 
 </script>
 
