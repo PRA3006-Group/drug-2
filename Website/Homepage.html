@@ -371,7 +371,7 @@
 	makeBubble(nameValuePairs);
 
         // Initialise clinical trial dataset
-	let clusterSpecificArray_clinicalTrials= []; let counter = 0;
+	let clusterSpecificArray_clinicalTrials= []; 
 	
 	// Loop query over drugs belonging to cluster
         for (let i=0; i< nameValuePairs.length;i++) {		
@@ -390,11 +390,10 @@
 	    const results_B = await response_B.json()
 	    const simpleResults_B = bio2r.simplify.sparqlResults(results_B)
             clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults_B.length};
-	    counter--;  
 	        } 	 
 		
 	// Run sparql query with current loop iteration and current url2 value
-	bio2rdfQueryFunc(i, url_B); counter++;
+	bio2rdfQueryFunc(i, url_B);
         }
 	
 	// Wait until async funciton queries have finished
