@@ -1,5 +1,5 @@
 # README
-This code is a team-developed web page, which aims to explore drug multifunctionality, that utilizes concept learnt through the duration of the Programming in Life Sciences course offered by the Maastricht Science Programme.
+This code is a team-developed web page that utilizes concept learnt through the duration of the Programming in Life Sciences course offered by the Maastricht Science Programme.
 
 ## Running the code
 1. Begin by downloading the ZIP file containing the code.
