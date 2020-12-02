@@ -7,6 +7,9 @@ This code is a team developed webpage that utilizes concept learnt through the d
 3. Navigating between the different pages should be possible from the opened webpage.
 4. Explore the multifunctionality of drugs from available disease clusters!
 
+Possible bug:
+- The website's stylesheet may not run correctly when opening the webpage --> Fix this by closing everything, opening the stylesheet, then re-opening the homepage.
+
 ## Developers
 - Kabir Aura
 - Hannah Schultheiss
