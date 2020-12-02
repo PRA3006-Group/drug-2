@@ -1,5 +1,6 @@
 # README
-This code is a team developed webpage that utilizes concept learnt through the duration of the Programming in Life Sciences course offered by the Maastricht Science Programme.
+This code is a team developed webpage that utilizes concepts learnt through the duration of the Programming in Life Sciences course offered by the Maastricht Science Programme.
+We aimed to investigate drug multifunctionality with data obtained from Wikidata and Bio2RDF.
 
 ## Running the code
 1. Begin by downloading the ZIP file containing the code.
@@ -14,4 +15,3 @@ Possible bug:
 - Kabir Aura
 - Hannah Schultheiss
 - Lucas Reed
-
