@@ -1,8 +1,5 @@
 <!-- PRA3006 Assignment: Kabir, Hannah, Lucas -->
 
-<!-- +++++++++ Comments refer to completed tasks -->
-<!-- \/\/\/\/\ Comments refer to incomplete tasks -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,8 +38,8 @@
   </div>
 
 <!-- Navigation Bar -->
-<!-- |--- ++++++++++ Make interactive (hover colour)    -->	
-<!-- |--- ++++++++++ Add links to other webpages        -->	
+<!-- |--- Buttons link to respective webpages in same folder    -->	
+<!-- |--- Styling: Hover/Current page effects                   -->	
 <div class="bar">
   <ul>
     <li><a class="current" href="Homepage.html">Home</a></li>
@@ -52,7 +49,7 @@
   </ul>
 </div>
 
-<!-- +++++++ Add Introduction -->	
+<!-- Usage instructions -->	
 <div class="boxUnit">
   <span class="boxUnitTitle">&ensp; How does this work? &ensp;</span>
   <!-- Steps 1-4 -->	
@@ -70,12 +67,11 @@
 </div>
 
 <!-- Cluster Selection Panel -->
-<!-- |--- ++++++++++ Make interactive (hover size)                     -->	
-<!-- |--- ++++++++++ Provide specific input to onclick function        -->
+<!-- |--- ++++++++++ Accepts cluster input, sends it to chooseClust function upon click  -->	
 <div class="selection">
   Select a disease cluster
   <div class="buttonRowHolder">
-    <!-- Buttons: class to stylise; id to change style upon click, onclick function to implement corresponding queries and graphs -->	  
+    <!-- Buttons: class to stylise; id to change style upon click, onclick attribute to implement corresponding queries and graphs -->	  
     <button class="clusterButton" id="heart disease" onclick="chooseClust('heart disease')">Heart diseases</button>
     <button class="clusterButton" id="anxiety disorder" onclick="chooseClust('anxiety disorder')">Anxiety disorders</button>
     <button class="clusterButton" id="brain diseases" onclick="chooseClust('brain diseases')">Brain diseases</button>
@@ -87,19 +83,22 @@
 </div>   
 
 
-<!-- Bubble Chart -->	
-<!-- |--- ++++++++ figure out how to center! -->
+<!-- Bubble Chart 1/2 - Display -->	
+<!-- |--- Displays number of diseases treated by drugs -->
+<!-- |--- Changes with button press                    -->	
 <div class="boxUnit" style="border-width: 10px 10px 10px 10px">
   <span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug treats more diseases? &ensp;</span>
-  <!-- #chart div for SVG element of makeBubble() -->
+  <!-- #chart receives SVG element of makeBubble() -->
   <div id="chart" style="text-align:center;">
   </div>
 </div>
-		
+
+<!-- Bubble Chart 2/2 - Code -->
 <script>
-	
 	// Bubble Chart Function, adapted from Egon W., 2020 - https://github.com/egonw/pils/tree/master/BubbleChart
-	// |--- +++++++ Overwrites previous chart when re-called upon button press
+	// |--- Accepts name-value pair object array
+	// |--- Overwrites previous chart when re-called upon button press
+	// |--- Displays bubble for each drug with radius proportional to (value)^2 
 	function makeBubble(dataset) {
 		// Remove previous chart
 		document.getElementById("chart").innerHTML = "";
@@ -176,16 +175,18 @@
 	}
 </script>
 
-<!-- Bar Chart -->
+<!-- Bar Chart 1/2 - Display -->
 <div class="boxUnit">
-  <span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug has had more trials? &ensp;</span>
+        <span class="boxUnitTitle" style="font-size:4em">&ensp; Which drug has had more trials? &ensp;</span>
     <br><br><br>
-  <span id="yLabel" style="font-style:italic;"></span>
+        <span id="yLabel" style="font-style:italic;"></span>
     <br>
-  <!-- div chartB to add graph from makeBarChart() -->	
-  <div id="chartB"></div>
+  <!-- #chartB to receive graph from makeBarChart() -->	
+        <div id="chartB">
+        </div>
     <br><br>
-        <!-- divs for Bar Chart labels, filled by makeBarChart() -->	
+	
+  <!-- divs for Bar Chart labels, filled by makeBarChart() -->	
 	<div class="figure"> 
 	  <div id="legendLabel"></div>
 	    <br>
@@ -217,21 +218,25 @@
 	
 </div>  
 
+<!-- Bar Chart 2/2 - Code -->
 <script>
         labelArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"];
         
 	// Bar Chart Function, adapted from Egon W., 2020 - https://github.com/egonw/pils/blob/master/HistogramChart/index.html
-	// |--- +++++++ Builds array of drugNames to be used in legend divs
+	// |--- Accepts name-value pair object array of length 15
+	// |--- Displays bar chart with 15 bars, labelled A-O
+	// |--- Prints legend with corresponding names of A-O
 	function makeBarChart(dataset) {
                 
 		// PART 1: Make Bar Chart (to be shown in div class="chartB")
+		
 			// Remove previous chart
 			document.getElementById("chartB").innerHTML = "";
 		        // Add relevant text that doesn't need to be there before the barChart shows up
 			document.getElementById("yLabel").innerHTML = "Y axis represents number of clinical trials per drug";
 			document.getElementById("legendLabel").innerHTML = "Legend to the corresponding drugs";
 
-			// Add labelArray
+			// Add label to input object array
 			for(let i=0; i<15; i++) {
 			  dataset[i].label = labelArray[i]; 
 			}
@@ -284,30 +289,29 @@
 			  .call(yAxis);
 	
 		// PART 2: Make legend (to be shown in legend divs)
-		let drugNames = dataset.map(a => a.name)
-		for(let i = 0; i<15; i++) {
-		  document.getElementById(labelArray[i]).innerHTML = labelArray[i]+`: ${drugNames[i]}`;
-		}	
+			
+			let drugNames = dataset.map(a => a.name)
+			for(let i = 0; i<15; i++) {
+			  document.getElementById(labelArray[i]).innerHTML = labelArray[i]+`: ${drugNames[i]}`;
+			}	
 	}
 	
 </script>	
-	
-<!-- Display sparql query output in typewriter font - won't be needed in final version-->
-<pre id="output"></pre>	
+
 	
 <!-- ------------------------------------------ -->
 <!-- PART B: COMPONENTS NOT VISIBLE ON THE PAGE -->
 <!-- ------------------------------------------ -->
 
-<!-- SPARQL Query components -->	
+<!-- Script below carries out sparql queries and sends dataset to graph functions -->	
 <script>
 	
   // SECTION 1: Does not vary with user cluster selection, runs once at the beginning
-	let wikiDataArray = [];	
+	let wikiDataArray = [];	// Stores wikidata results in an array available to use for bio2RDF query
 	const buttonIDs = ["heart disease", "anxiety disorder", "brain diseases", "inflammatory disease", "lung disease", "kidney disease", "bone disease"];
 	
 	// Wikidata query
-	// |---- ++++++++++ Obtains Cluster->Drug->Disorder objects for ALL clusters
+	// |--- Obtains Cluster->Drug->Disorder objects for ALL clusters
 	query = `SELECT DISTINCT  ?drugLabel ?disorderLabel ?diseaseClusterLabel
 	     WHERE {
 		 VALUES ?diseaseCluster {wd:Q190805 wd:Q544006 wd:Q576349 wd:Q3508753 wd:Q3392853 wd:Q1054718 wd:Q4941552} 
@@ -324,8 +328,6 @@
 
 	  // Full query results stored in wikiDataArray
 	  wikiDataArray = simpleResults_W;
-	  // Outputs query results as basic text display - to eventually be replaced with visualisation 	
-	  
 	}
 	
 	// Run query, get wikiData data
@@ -334,13 +336,12 @@
         
   // SECTION 2: Varies with cluster selection
 	
-   // Runs upon button press i.e. cluster selection, calls bio2RDF query and calls graph functions
-   function chooseClust(choice) {
-        // Data preparation	
-	// |---- +++++++++ Selectively extract objects of wikiDataArray based on cluster
-	// |---- +++++++++ Produce output variable 'dataset' compatible with Bubble Chart input (See makeBubble())
-	// |---- +++++++++ Produce top-15 drug object array compatible with Bar Chart input (See makeBarChart())   
-	
+     // function chooseClust: Runs upon cluster selection, accepts cluster name as input
+     // |--- Selectively extracts objects of wikiDataArray based on cluster
+     // |--- Produces array 'nameValuePairs' sent as input to Bubble Chart (See makeBubble())
+     // |--- Produces array 'clusterSpecificArray_clinicalTrials', top-15 clinical trial drugs, sent as input to Bar Chart (See makeBarChart()) 	
+     function chooseClust(choice) {	
+	  
 	// Set previously clicked buttons to base style
 	for(let i=0; i<7; i++) {
 	   document.getElementById(buttonIDs[i]).style["background-color"] = "#f2d9f2";	
@@ -367,13 +368,13 @@
 	  }	  
 	}
 
-	// ++++++ Make bubble chart corresponding to dataset    
+	// Make bubble chart corresponding to nameValuePairs    
 	makeBubble(nameValuePairs);
 
         // Initialise clinical trial dataset
 	let clusterSpecificArray_clinicalTrials= []; 
 	
-	// Loop query over drugs belonging to cluster
+	// Loop bio2RDF query over drugs belonging to cluster
         for (let i=0; i< nameValuePairs.length;i++) {		
 
           let query2 = `PREFIX cv: <http://bio2rdf.org/clinicaltrials_vocabulary:>
@@ -392,8 +393,8 @@
             clusterSpecificArray_clinicalTrials[iter] = {"name": nameValuePairs[iter].name, "value": simpleResults_B.length};
 	        } 	 
 		
-	// Run sparql query with current loop iteration and current url2 value
-	bio2rdfQueryFunc(i, url_B);
+	  // Run sparql query with current loop iteration and current url2 value
+	  bio2rdfQueryFunc(i, url_B);
         }
 	
 	// Wait until async funciton queries have finished
@@ -407,7 +408,6 @@
 	}
 
   }
-
 </script>
 
 </body>
